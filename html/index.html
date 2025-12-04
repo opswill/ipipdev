@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <title>What is my IP address? — {{ string.upper(Host) }}</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description"
+    content="What is my IP address? — Yet another tool to find your own IP address and glean information about it." />
+  <link rel="canonical" href="https://{{ Host }}/" />
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/purecss/build/pure-min.css" />
+  <link rel="stylesheet" href="https://unpkg.com/purecss/build/grids-responsive-min.css" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"  />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/open-sans/index.min.css" />
+
+  <!-- JS -->
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+  {( script.html )}
+  {( styles.html )}
+</head>
+
+<body>
+  <div class="content">
+    <div class="pure-g gutters center">
+      <div class="pure-u-1 pure-u-md-2-3">
+        <div class="l-box">
+
+          <h1>Find Your IP Address</h1>
+          <p><code class="ip">{{ IP }}</code></p>
+          <p>Yet another tool to find your own IP address and glean information about it.</p>
+
+          <h2>IP Address Details & Intelligence</h2>
+          <table class="info-table">
+
+            <tr id="showIPv4" hidden>
+              <th scope="row">IPv4 address</th>
+              <td id="showIPv4Value">-</td>
+            </tr>
+            <tr id="showIPv6" hidden>
+              <th scope="row">IPv6 address</th>
+              <td id="showIPv6Value">-</td>
+            </tr>
+
+            {% for _, v in ipairs(context) do %}
+              {% if v.Show and v.Value and v.Value ~= "" then %}
+                <tr>
+                  <th scope="row">{* v.Show *}</th>
+                  <td>{* v.Value *}</td>
+                </tr>
+              {% end %}
+            {% end %}
+
+          </table>
+
+          {% if Latitude and Longitude then %}
+          <h2>Approximate Location on Map</h2>
+          <div id="map"></div>
+          {% end %}
+
+          <h2>How to Access IP Data via API?</h2>
+          <p>Build your query with the widget below and see the result.</p>
+
+          <div class="input-buttons">
+            <button name="ip" class="pure-button widget-select selected" onclick="changeInput('ip', this)">ip</button>
+
+            {% 
+            local added = {ip = true}
+            for key, value in pairs(ipinfo or {}) do
+              if not added[key] and key ~= "type" and key ~= "source" 
+                 and value ~= nil and value ~= "" and type(value) ~= "table" then
+                added[key] = true 
+         %}
+            <button name="{{key}}" class="pure-button widget-select" onclick="changeInput('{{key}}', this)">{{key}}</button>
+         {% end end %}
+
+         {% if not added.json then %}
+            <button name="json" class="pure-button widget-select" onclick="changeInput('json', this)">json</button>
+         {% end %}
+          </div>
+
+          <div class="widgetbox input"><code id="command">$ curl {{ Host }}/</code></div>
+          <div id="output" class="widgetbox output"></div>
+
+          <form class="pure-form input-buttons" onsubmit="return false;">
+            <fieldset>
+              <label>
+                Check another IP or domain (optional)
+                <input id="ipInput" type="text" placeholder="Lookup another IP, domain or hostname"
+                  onkeyup="updateIP(this.value.trim())" />
+              </label>
+              <button type="button" class="pure-button" onclick="navigate()">Query</button>
+            </fieldset>
+          </form>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <p>©2020-{{string.sub(ngx.today(),0,4)}} - <a href="//{{ngx.var.server_name}}">{{string.upper(ngx.var.server_name)}}</a></p>
+  </div>
+
+</body>
+</html>

@@ -1,0 +1,113 @@
+<script>
+  const host = "{{ Host }}";
+  const raw = "{{JSON}}";
+  const data = JSON.parse('{{JSON}}'
+     .replace(/&quot;/g, '"')
+     .replace(/&#39;/g, "'")
+     .replace(/&#47;/g, "/")
+     .replace(/&lt;/g, "<")
+     .replace(/&gt;/g, ">")
+     .replace(/&amp;/g, "&")
+   );
+
+  let currentPath = '';
+  let queryIP = '';
+
+  const $ = (sel) => document.querySelector(sel);
+  const $$ = (sel) => document.querySelectorAll(sel);
+
+  window.onload = () => {
+    updateCommand();
+    changeInput('ip'); 
+
+    if ({{ Latitude or "false" }} && {{ Longitude or "false" }}) {
+      setTimeout(showMap, 300);
+    }
+
+    if (!window.location.search) {
+      showComplementaryIP();
+    }
+  };
+
+  function updateCommand() {
+    const fullPath = currentPath + (queryIP || '');
+    $('#command').textContent = `$ curl ${host}/${fullPath || ''}`.trim();
+  }
+
+  function changeInput(input, button) {
+    currentPath = (input === 'ip') ? '' : input;
+
+    let output = '';
+    if (input === 'json') {
+      output = JSON.stringify(data, null, 2);
+    } else if (input === 'ip') {
+      output = data.ip || '';
+    } else {
+      output = data[input] ?? '';
+    }
+    $('#output').textContent = output;
+
+    $$('.widget-select').forEach(b => b.classList.remove('selected'));
+    if (button) button.classList.add('selected');
+
+    updateCommand();
+  }
+
+  function updateIP(value) {
+    queryIP = value ? `?query=${encodeURIComponent(value)}` : '';
+    updateCommand();
+  }
+
+  function navigate() {
+    if (queryIP) {
+      window.location.href = '/' + queryIP;
+    }
+  }
+
+  async function showComplementaryIP() {
+    const type = (data.type || '').toUpperCase();
+
+    const showRow = (id, value) => {
+      const row = $(`#${id}`);
+      const cell = $(`#${id}Value`);
+      if (row && cell && value) {
+        row.removeAttribute('hidden');
+        cell.textContent = value;
+      }
+    };
+
+    try {
+      if (type === 'IPV4') {
+        const ipv6 = await fetch('https://ipv6.ident.me/').then(r => r.ok ? r.text() : null);
+        if (ipv6) showRow('showIPv6', ipv6.trim());
+      } else if (type === 'IPV6') {
+        const ipv4 = await fetch('https://ipv4.ident.me/').then(r => r.ok ? r.text() : null);
+        if (ipv4) showRow('showIPv4', ipv4.trim());
+      } else {
+        const [v4, v6] = await Promise.allSettled([
+          fetch('https://ipv4.ident.me/').then(r => r.ok ? r.text() : null),
+          fetch('https://ipv6.ident.me/').then(r => r.ok ? r.text() : null)
+        ]);
+        if (v4.status === 'fulfilled' && v4.value) showRow('showIPv4', v4.value.trim());
+        if (v6.status === 'fulfilled' && v6.value) showRow('showIPv6', v6.value.trim());
+      }
+    } catch (e) {
+      console.log('Failed to fetch complementary IP:', e);
+    }
+  }
+
+  function showMap() {
+    const lat = {{ Latitude }};
+    const lng = {{ Longitude }};
+
+    const map = L.map('map').setView([lat, lng], 12);
+
+    L.tileLayer('https://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(map);
+
+    L.marker([lat, lng]).addTo(map)
+      .bindPopup('IP is here!')
+      .openPopup();
+  }
+</script>
