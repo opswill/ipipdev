@@ -207,21 +207,54 @@ end
 -- Function to build whois links for template
 function shared.build_whois_links(ipinfo)
     local links = {}
-    if ipinfo.ip then
-        table.insert(links, string.format("<a href='//%s/whois?query=%s'>%s</a>", ngx.var.server_name, ipinfo.ip, ipinfo.ip))
+    local ip   = ipinfo.ip or ""
+    local type = ipinfo.type and string.upper(ipinfo.type) or "IP"
+
+    if ip ~= "" then
+        table.insert(links, string.format(
+            '<a href="//%s/whois?query=%s" target="_blank" rel="noopener" ' ..
+            'title="Whois registration record for this %s address">%s Whois</a>',
+            ngx.var.server_name, ip, type, type
+        ))
     end
+
     if ipinfo.asn then
-        table.insert(links, string.format("<a href='//%s/whois?query=AS%s'>AS%s</a>", ngx.var.server_name, ipinfo.asn, ipinfo.asn))
+        table.insert(links, string.format(
+            '<a href="//%s/whois?query=AS%s" target="_blank" rel="noopener" ' ..
+            'title="Autonomous System registry and prefix information">AS%s</a>',
+            ngx.var.server_name, ipinfo.asn, ipinfo.asn
+        ))
     end
+
     if ipinfo.hostname then
         local match = ngx.re.match(ipinfo.hostname, "([^.]+\\.[^.]+)$")
         if match and match[1] then
-            table.insert(links, string.format("<a href='//%s/whois?query=%s'>%s</a>", ngx.var.server_name, match[1], match[1]))
+            local domain = match[1]
+            table.insert(links, string.format(
+                '<a href="//%s/whois?query=%s" target="_blank" rel="noopener" ' ..
+                'title="Domain registration record for this IP\'s reverse DNS hostname">%s</a>',
+                ngx.var.server_name, domain, domain
+            ))
         end
     end
-    table.insert(links, string.format("<a href='https://stat.ripe.net/resource/%s'>RIPE</a>", ipinfo.ip or ""))
-    table.insert(links, string.format("<a href='https://bgp.he.net/ip/%s'>HE</a>", ipinfo.ip or ""))
-    return table.concat(links, " ")
+
+    if ip ~= "" then
+        local tools = {
+            {url = "https://stat.ripe.net/" .. ip,               name = "RIPEstat",       title = "Authoritative RIPE NCC statistics, BGP, geo & history"},
+            {url = "https://bgp.he.net/ip/" .. ip,               name = "HE BGP",         title = "Live BGP route table, announced prefixes and peers"},
+            {url = "https://www.abuseipdb.com/check/" .. ip,     name = "AbuseIPDB",      title = "Community-reported abuse confidence score and blacklist status"},
+            {url = "https://radar.cloudflare.com/ip/" .. ip,     name = "Cloudflare Radar", title = "Global traffic ranking, threat intel and adoption trends"},
+        }
+
+        for _, t in ipairs(tools) do
+            table.insert(links, string.format(
+                '<a href="%s" target="_blank" rel="noopener noreferrer" title="%s">%s</a>',
+                t.url, t.title, t.name
+            ))
+        end
+    end
+
+    return table.concat(links, " <span style='color:#999;font-size:1.2em'>•</span> ")
 end
 
 -- Expose shared to ngx (all Lua files can access via ngx.shared.ipip)
