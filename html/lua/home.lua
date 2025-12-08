@@ -15,7 +15,7 @@ end
 local use_aws = (target_ip == ngx.var.remote_addr)
 local ipinfo  = shared.build_ip_detail(target_ip, use_aws)
 
-local uri = ngx.var.uri 
+local uri = ngx.var.uri
 
 if uri == "/json" then
     ngx.header["Content-Type"] = "application/json; charset=utf-8"
@@ -25,11 +25,7 @@ end
 
 if uri == "/proxy" then
     ngx.header["Content-Type"] = "application/json; charset=utf-8"
-    if ipinfo.proxy then
-        ngx.say(ipinfo.proxy)
-    else
-        ngx.say("")
-    end
+    ngx.say(ipinfo.proxy or "")
     return ngx.exit(200)
 end
 
@@ -43,21 +39,14 @@ if uri == "/security" then
     return ngx.exit(200)
 end
 
-local allow_fields = { "ip", "type", "continent", "country", "country_ineu", "country_iso", "region", "region_iso", "city", "latitude", "longitude", "metro", "zip", "timezone", "asn", "isp", "hostname", "source" }
-
-local allow = {}
-for _, f in ipairs(allow_fields) do
-    allow[f] = true
-end
-
-local field = uri:match("^/([^/%?]+)")
-if field and allow[field] then
-    ngx.header["Content-Type"] = "text/plain; charset=utf-8"
-    ngx.say(ipinfo[field] or "")
-    return ngx.exit(200)
-else
-    return ngx.exit(404)
-end
+local single_fields = {
+    ip           = true, continent    = true, country     = true,
+    country_iso  = true, country_ineu = true, region      = true,
+    region_iso   = true, city         = true, latitude    = true,
+    longitude    = true, metro        = true, zip         = true,
+    timezone     = true, asn          = true, hostname    = true,
+    type        = true,  isp          = true, source      = true,
+}
 
 local field = uri:match("^/([^/%?]+)")
 if field then
@@ -103,7 +92,7 @@ shared.template.render("index.html", {
     {Show = "User Agent",     Value = ngx.req.get_headers()["user-agent"] or ""},
     {Show = "Proxy",          Value = ipinfo.proxy},
     {Show = "Whois",          Value = shared.build_whois_links(ipinfo)},
-    
+
     ipinfo    = ipinfo,
     JSON = cjson.encode(ipinfo)
 })
