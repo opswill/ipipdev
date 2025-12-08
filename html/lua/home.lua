@@ -89,7 +89,7 @@ shared.template.render("index.html", {
     {Show = "ASN",            Value = ipinfo.asn},
     {Show = "ISP",            Value = ipinfo.isp},
     {Show = "Hostname",       Value = ipinfo.hostname},
-    {Show = "User Agent",     Value = ngx.req.get_headers()["user-agent"] or ""},
+    {Show = "User Agent",     Value = ipinfo.user_agent},
     {Show = "Proxy",          Value = ipinfo.proxy},
     {Show = "Whois",          Value = shared.build_whois_links(ipinfo)},
 
