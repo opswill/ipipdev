@@ -28,7 +28,7 @@ if uri == "/proxy" or uri == "/proxy/" then
     if ipinfo.security then
         ngx.say(cjson.encode(ipinfo.security))
     else
-        ngx.say("{}")
+        ngx.say("")
     end
     return ngx.exit(200)
 end
@@ -43,20 +43,19 @@ local single_fields = {
 }
 
 local field = uri:match("^/([^/%?]+)")
-if field and single_fields[field] then
-    ngx.header["Content-Type"] = "text/plain; charset=utf-8"
-    ngx.say(ipinfo[field] or "")
-    return ngx.exit(200)
+if field then
+    if single_fields[field] then
+        ngx.header["Content-Type"] = "text/plain; charset=utf-8"
+        ngx.say(ipinfo[field] or "")
+        return ngx.exit(200)
+    else
+        return ngx.exit(404)
+    end
 end
 
 if shared.is_cli_tool() then
     ngx.header["Content-Type"] = "text/plain; charset=utf-8"
-    local path = uri:match("^/([^/%?]+)") or ""
-    if field and fields[path] then
-        ngx.say(ipinfo[path] or "")
-    else
-        ngx.say(target_ip)
-    end
+    ngx.say(target_ip)
     return ngx.exit(200)
 end
 
