@@ -240,7 +240,7 @@ function shared.build_whois_links(ipinfo)
 
     if ip ~= "" then
         local tools = {
-            {url = "https://stat.ripe.net/" .. ip,               name = "RIPEstat",       title = "Authoritative RIPE NCC statistics, BGP, geo & history"},
+            {url = "https://stat.ripe.net/resource/" .. ip,               name = "RIPEstat",       title = "Authoritative RIPE NCC statistics, BGP, geo & history"},
             {url = "https://bgp.he.net/ip/" .. ip,               name = "HE BGP",         title = "Live BGP route table, announced prefixes and peers"},
             {url = "https://www.abuseipdb.com/check/" .. ip,     name = "AbuseIPDB",      title = "Community-reported abuse confidence score and blacklist status"},
             {url = "https://radar.cloudflare.com/ip/" .. ip,     name = "Cloudflare Radar", title = "Global traffic ranking, threat intel and adoption trends"},
