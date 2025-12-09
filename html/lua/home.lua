@@ -45,7 +45,7 @@ local single_fields = {
     region_iso   = true, city         = true, latitude    = true,
     longitude    = true, metro        = true, zip         = true,
     timezone     = true, asn          = true, hostname    = true,
-    type         = true, isp          = true, source      = true,
+    version      = true, isp          = true, source      = true,
     user_agent   = true, flag         = true, 
 }
 
@@ -74,7 +74,7 @@ shared.template.render("index.html", {
     Latitude  = ipinfo.latitude,
     Longitude = ipinfo.longitude,
 
-    {Show = "Prefer IP Type", Value = ipinfo.type},
+    {Show = "Version",        Value = ipinfo.type},
     {Show = "Continent",      Value = ipinfo.continent},
     {Show = "Country",        Value = ipinfo.country},
     {Show = "Country (ISO)",  Value = ipinfo.country_iso},

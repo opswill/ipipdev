@@ -151,7 +151,7 @@ end
 function shared.build_ip_detail(ip, use_aws)
     local detail = {
         ip = ip,
-        type = select(1, shared.get_ip_type(ip)),
+        version = select(1, shared.get_ip_type(ip)),
         hostname = shared.get_hostname(ip),
         user_agent = ngx.req.get_headers()["user-agent"] or "",  
     }
