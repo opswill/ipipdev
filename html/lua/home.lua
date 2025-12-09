@@ -46,7 +46,7 @@ local single_fields = {
     longitude    = true, metro        = true, zip         = true,
     timezone     = true, asn          = true, hostname    = true,
     type         = true, isp          = true, source      = true,
-    user_agent   = true, 
+    user_agent   = true, flag         = true, 
 }
 
 local field = uri:match("^/([^/%?]+)")
