@@ -2,7 +2,7 @@ local shared = ngx.shared.ipip
 local cjson  = shared.cjson
 
 local args        = ngx.req.get_uri_args()
-local query_param = args.query and ngx.unescape_uri(args.query) or nil
+local query_param = args.query or nil
 
 local target_ip
 if query_param then

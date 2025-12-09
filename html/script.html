@@ -53,8 +53,15 @@
     updateCommand();
   }
 
+  function encodeQueryValue(value) {
+    return encodeURIComponent(value)
+      .replace(/%3A/gi, ':')
+      .replace(/%5B/gi, '[')
+      .replace(/%5D/gi, ']');
+  }
+
   function updateIP(value) {
-    queryIP = value ? `?query=${encodeURIComponent(value)}` : '';
+    queryIP = value ? `?query=${encodeQueryValue(value)}` : '';
     updateCommand();
   }
 
@@ -63,7 +70,7 @@
     e.preventDefault(); 
     const input = $('#ipInput');
     if (input && input.value.trim()) {
-      queryIP = `?query=${encodeURIComponent(input.value.trim())}`;
+      queryIP = `?query=${encodeQueryValue(input.value.trim())}`;
       navigate();
     }
   }
