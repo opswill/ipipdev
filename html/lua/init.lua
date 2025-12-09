@@ -1,10 +1,15 @@
 -- GeoIP2 Databases: city and asn, modify the path as needed
 local geo = require "resty.maxminddb"
 if not geo.initted() then
-    geo.init({
+    local ok, err = geo.init({
         city = "/var/www/html/ipdb/GeoLite2-City.mmdb",
         asn = "/var/www/html/ipdb/GeoLite2-ASN.mmdb"
     })
+
+    if not ok then
+        ngx.log(ngx.ERR, "Failed to initialize MaxmindDB: ", err or "unknown error")
+        return ngx.exit(ngx.HTTP_INTERNAL_SERVER_ERROR)
+    end
 end
 
 -- ip2location proxy database, modify the path as needed
