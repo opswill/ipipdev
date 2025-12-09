@@ -58,6 +58,16 @@
     updateCommand();
   }
 
+
+  function handleSubmit(e) {
+    e.preventDefault(); 
+    const input = $('#ipInput');
+    if (input && input.value.trim()) {
+      queryIP = `?query=${encodeURIComponent(input.value.trim())}`;
+      navigate();
+    }
+  }
+  
   function navigate() {
     if (queryIP) {
       window.location.href = '/' + queryIP;
@@ -97,9 +107,12 @@
   }
 
   function showMap() {
-    const lat = {{ Latitude }};
-    const lng = {{ Longitude }};
-
+    const lat = {{ Latitude  or "null" }};
+    const lng = {{ Longitude  or "null" }};
+    
+    if (lat === null || lng === null || lat === "" || lng === "" || isNaN(lat) || isNaN(lng)) {
+         return;
+    }
     const map = L.map('map').setView([lat, lng], 12);
 
     L.tileLayer('https://{s}.tile.osm.org/{z}/{x}/{y}.png', {

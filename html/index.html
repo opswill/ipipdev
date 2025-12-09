@@ -84,17 +84,17 @@
           <div class="widgetbox input"><code id="command">$ curl {{ Host }}/</code></div>
           <div id="output" class="widgetbox output"></div>
 
-          <form class="pure-form input-buttons" onsubmit="return false;">
+          <form class="pure-form input-buttons" onsubmit="handleSubmit(event)">
             <fieldset>
               <label>
                 Check another IP or domain (optional)
                 <input id="ipInput" type="text" placeholder="Lookup another IP, domain or hostname"
-                  onkeyup="updateIP(this.value.trim())" />
+                  onkeyup="updateIP(this.value.trim())" autocomplete="off" />
               </label>
-              <button type="button" class="pure-button" onclick="navigate()">Query</button>
+              <button type="submit" class="pure-button pure-button-primary">Query</button>
             </fieldset>
           </form>
-
+          
         </div>
       </div>
     </div>
