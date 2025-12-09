@@ -170,6 +170,7 @@ function shared.build_ip_detail(ip, use_aws)
             detail.metro = aws.metrocode
             detail.zip = aws.postalcode
             detail.asn = aws.asn
+            detail.flag = detail.country_iso and shared.get_country_flag_emoji(detail.country_iso)
             detail.source = "AWS"
             return detail
         end
@@ -188,6 +189,7 @@ function shared.build_ip_detail(ip, use_aws)
     detail.metro = geo_data.metrocode
     detail.asn = geo_data.asn
     detail.isp = geo_data.isp
+    detail.flag = detail.country_iso and shared.get_country_flag_emoji(detail.country_iso)
     detail.source = "MaxMind"
     return detail
 end
@@ -256,6 +258,44 @@ function shared.build_whois_links(ipinfo)
     end
 
     return table.concat(links, " <span style='color:#999;font-size:1.2em'>•</span> ")
+end
+
+-- function to build country flag emoji from ISO code
+function shared.get_country_flag_emoji(iso)
+    if not iso or type(iso) ~= "string" or #iso ~= 2 then
+        return nil
+    end
+
+    local code = string.upper(iso)
+
+    if not shared._flag_cache then
+        shared._flag_cache = {}
+    end
+
+    local cached = shared._flag_cache[code]
+    if cached ~= nil then
+        return cached 
+    end
+
+    -- Regional Indicator Symbols (A-Z)
+    local RI = {
+        A = "🇦", B = "🇧", C = "🇨", D = "🇩", E = "🇪", F = "🇫", G = "🇬",
+        H = "🇭", I = "🇮", J = "🇯", K = "🇰", L = "🇱", M = "🇲", N = "🇳",
+        O = "🇴", P = "🇵", Q = "🇶", R = "🇷", S = "🇸", T = "🇹", U = "🇺",
+        V = "🇻", W = "🇼", X = "🇽", Y = "🇾", Z = "🇿"
+    }
+
+    local a = RI[code:sub(1,1)]
+    local b = RI[code:sub(2,2)]
+
+    if not a or not b then
+        shared._flag_cache[code] = nil
+        return nil
+    end
+
+    local flag = a .. b
+    shared._flag_cache[code] = flag
+    return flag
 end
 
 -- Expose shared to ngx (all Lua files can access via ngx.shared.ipip)

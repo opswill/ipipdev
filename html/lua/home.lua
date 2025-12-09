@@ -78,6 +78,7 @@ shared.template.render("index.html", {
     {Show = "Continent",      Value = ipinfo.continent},
     {Show = "Country",        Value = ipinfo.country},
     {Show = "Country (ISO)",  Value = ipinfo.country_iso},
+    {Show = "Flag",           Value = ipinfo.flag},
     {Show = "In EU",          Value = ipinfo.country_ineu},
     {Show = "Region",         Value = ipinfo.region},
     {Show = "Region (ISO)",   Value = ipinfo.region_iso},
