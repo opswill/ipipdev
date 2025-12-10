@@ -95,6 +95,33 @@
             </fieldset>
           </form>
           
+          <h2>MCP Tool Server</h2>
+          <p>
+            Call IP intelligence directly from any IDE, editor, or AI chat that supports the Model Context Protocol.<br>
+          </p>
+
+          <h3>Currently available tool</h3>
+          <ul>
+            <li>
+                <code><strong>ip_lookup: </strong></code>
+                      IP or domain (resolves to IPv4) geolocation lookup. Returns country, region, city, ASN, ISP, and all other fields shown above. Leave the parameter empty to check your current IP.
+            </li>
+            <li>
+                <code><strong>whois_lookup: </strong></code>
+                      Query raw WHOIS record for a domain name, IP address, CIDR block or ASN. Returns the original detailed WHOIS record exactly as provided by the registrar or RIR.
+            </li>
+          </ul>
+
+          <h3 >MCP endpoint</h3>
+          <p><code class="ip">https://{{ Host }}/mcp</code></p>
+
+          <h3>Usage notes:</h3>
+          <ul>
+            <li>Only <strong>Streamable HTTP</strong> transport is supported (required by most MCP clients).</li>
+            <li>Add the URL above as a remote mcp server in VS Code, Cursor, Zed or any other MCP-compatible editor.</li>
+            <li>Once connected, you can invoke <code>ip_lookup or whois_lookup</code> directly from your AI chat or code assistant.</li>
+          </ul>
+
         </div>
       </div>
     </div>
