@@ -119,7 +119,7 @@ end
 
 local whois_data
 
-if qtype == "asn" then）
+if qtype == "asn" then
     whois_data = get_whois("whois.radb.net", normalized_query)
         or get_whois("whois.ripe.net", "-B " .. normalized_query) 
 elseif qtype == "domain" then
