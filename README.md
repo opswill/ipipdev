@@ -11,6 +11,24 @@
 * **API 接口:** 提供多种 API 端点（如 `/json`、`/country`、`/ip`），方便以 JSON 或纯文本格式获取数据，易于集成。
 * **AWS 支持:** 部署在 AWS CloudFront 后时，可选择使用 `CloudFront-Viewer-*` 头部信息进行地理定位。
 
+## 🛠️ MCP Tool Server（全新功能）
+
+ipip.dev 现已提供原生 **MCP**（Model Context Protocol）服务，可直接在任何支持 MCP 的编辑器或 AI 助手（如 Cursor、Windsurf、SiliconFlow、Continue.dev 等）中调用。
+
+### 可用工具
+
+| 工具名          | 功能描述                                                                                   | 用法示例                                      |
+|-----------------|--------------------------------------------------------------------------------------------|-----------------------------------------------|
+| `ip_lookup`     | IP 或域名地理位置查询（域名会自动解析为 IPv4）<br>返回国家、地区、城市、ASN、ISP 等全部字段<br>留空则查询当前访问者 IP | `@ip_lookup 1.1.1.1`<br>`我的 IP 在哪里？`    |
+| `whois_lookup`  | 原始 WHOIS 查询，支持域名、IP、CIDR、ASN<br>返回注册商或 RIR 提供的完整原始记录<br>留空则查询当前访问者 IP 的 WHOIS | `@whois_lookup google.com`<br>`AS13335 的 WHOIS` |
+
+
+### 使用方式
+
+- 目前仅支持 **Streamable HTTP** 传输协议（几乎所有 MCP 客户端均已支持）。
+- 在编辑器/助手里添加远程 MCP 服务器
+- 直接用 `@ip_lookup` / `@whois_lookup` 调用，或用自然语言描述需求即可。
+
 ## ⚙️ 先决条件和配置
 
 该服务依赖特定的第三方 Lua 库和 IP 数据库。

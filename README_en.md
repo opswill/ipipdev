@@ -13,6 +13,23 @@ It is implemented using **OpenResty** (nginx with Lua) for high performance, uti
 * **API Endpoints:** Offers various API endpoints to fetch data in JSON or plain text format for easy integration (e.g., `/json`, `/country`, `/ip`).
 * **AWS Support:** Can optionally use `CloudFront-Viewer-*` headers for geolocation if deployed behind AWS CloudFront.
 
+## 🛠️ MCP Tool Server (New!)
+
+ipip.dev now provides a native **MCP (Model Context Protocol)** server that can be used directly inside any MCP-compatible editor or AI assistant (Cursor, Windsurf, Continue.dev, SiliconFlow, etc.).
+
+### Available Tools
+
+| Tool            | Description                                                                                 | Example Usage                                    |
+|-----------------|---------------------------------------------------------------------------------------------|--------------------------------------------------|
+| `ip_lookup`     | IP or domain geolocation lookup (domains are automatically resolved to IPv4)<br>Returns country, region, city, ASN, ISP and all other fields<br>Leave empty to query your current IP | `@ip_lookup 1.1.1.1`<br>`Where is my IP?`        |
+| `whois_lookup`  | Raw WHOIS query for domains, IPs, CIDR blocks, or ASNs<br>Returns the complete original record from the registrar/RIR<br>Leave empty to query WHOIS of your current IP | `@whois_lookup google.com`<br>`WHOIS for AS13335` |
+
+### How to Use
+
+- Only **Streamable HTTP** transport is supported (used by nearly all MCP clients).
+- Add the URL as a remote MCP server in your editor/assistant.
+- Call tools with `@ip_lookup` / `@whois_lookup` or simply describe what you need in natural language.
+
 ## ⚙️ Prerequisites and Setup
 
 The service relies on specific third-party Lua libraries and IP databases.
