@@ -82,7 +82,7 @@
   }
 
   async function showComplementaryIP() {
-    const type = (data.type || '').toUpperCase();
+    const ipVersion = (data.version || '').toUpperCase();
 
     const showRow = (id, value) => {
       const row = $(`#${id}`);
@@ -94,10 +94,10 @@
     };
 
     try {
-      if (type === 'IPV4') {
+      if (ipVersion === 'IPV4') {
         const ipv6 = await fetch('https://ipv6.ident.me/').then(r => r.ok ? r.text() : null);
         if (ipv6) showRow('showIPv6', ipv6.trim());
-      } else if (type === 'IPV6') {
+      } else if (ipVersion === 'IPV6') {
         const ipv4 = await fetch('https://ipv4.ident.me/').then(r => r.ok ? r.text() : null);
         if (ipv4) showRow('showIPv4', ipv4.trim());
       } else {

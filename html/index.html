@@ -69,7 +69,7 @@
             {% 
             local added = {ip = true}
             for key, value in pairs(ipinfo or {}) do
-              if not added[key] and key ~= "type" and key ~= "source" 
+              if not added[key] and key ~= "source" 
                  and value ~= nil and value ~= "" and type(value) ~= "table" then
                 added[key] = true 
          %}
