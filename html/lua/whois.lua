@@ -50,18 +50,16 @@ local function validate_and_normalize_query(q)
     end
 
     -- domain
-    local domain = q:lower():match("^[%w._-]+%.(%w+%.%w+)$") 
-    if domain then
+    if q:find("%.") then
         local parts = {}
         for part in q:gmatch("[^%.]+") do
             table.insert(parts, part)
         end
-        if #parts >= 2 then
-            domain = parts[#parts-1] .. "." .. parts[#parts]
-            return "domain", domain
+        if #parts >= 2 and (not ipmatcher.parse_ipv4(q)) and (not ipmatcher.parse_ipv6(q)) then
+            local domain = parts[#parts-1] .. "." .. parts[#parts]
+            return "domain", domain:lower()
         end
     end
-
     return nil, "invalid query"
 end
 
