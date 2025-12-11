@@ -2,7 +2,16 @@
 local shared = ngx.shared.ipip
 local ipmatcher = shared.ipmatcher
 
-local query = ngx.var.arg_query
+local args = ngx.req.get_uri_args()
+local query = args and args.query or ngx.var.arg_query
+
+if query ~= nil and type(query) ~= "string" then
+    query = tostring(query)
+end
+
+if query then
+    query = ngx.unescape_uri(query)
+end
 
 if not query or query == "" then
     query = shared.get_client_ip()
