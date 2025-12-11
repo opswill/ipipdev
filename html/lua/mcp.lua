@@ -6,11 +6,14 @@ local tools = {
     {
         name = "ip_lookup",
         title = "IP Geolocation Lookup",
-        description = "Lookup IP or domain geolocation, ASN, ISP, and proxy detection. Leave empty to query the real client IP.",
+        description = "Query geolocation, ASN, ISP, hostname, proxy/VPN/hosting  detection for an IP or domain. Leave blank to detect the current visitor's real IP.",
         inputSchema = {
             type = "object",
             properties = {
-                query = { type = "string", description = "IP or domain (optional)" }
+                query = {
+                    type = "string",
+                    description = "IP address or domain name (optional, leave empty to use visitor's IP)"
+                }
             },
             additionalProperties = false
         }
@@ -18,16 +21,15 @@ local tools = {
     {
         name = "whois_lookup",
         title = "WHOIS Lookup",
-        description = "Query WHOIS information for an IP address, domain name or asn.",
+        description = "Retrieve WHOIS records for domain name, IP address, CIDR block, or ASN. Leave blank to query the WHOIS of the current visitor's IP.",
         inputSchema = {
             type = "object",
             properties = {
                 query = {
                     type = "string",
-                    description = "IP address, domain name ,asn to query WHOIS for"
+                    description = "Domain name, IP address, CIDR (e.g. 1.1.1.0/24), or ASN (e.g. AS13335). Optional — leave empty to use visitor's IP"
                 }
             },
-            required = { "query" },
             additionalProperties = false
         }
     }
