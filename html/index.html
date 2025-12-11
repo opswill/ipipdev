@@ -96,31 +96,47 @@
           </form>
           
           <h2>MCP Tool Server</h2>
-          <p>
-            Call IP intelligence directly from any IDE, editor, or AI chat that supports the Model Context Protocol.<br>
-          </p>
+            <p class="section-desc">
+              Instant IP geolocation and raw WHOIS lookup directly inside any MCP-compatible editor or AI assistant.
+            </p>
 
-          <h3>Currently available tool</h3>
-          <ul>
-            <li>
-                <code><strong>ip_lookup: </strong></code>
-                      IP or domain (resolves to IPv4) geolocation lookup. Returns country, region, city, ASN, ISP, and all other fields shown above. Leave the parameter empty to check your current IP.
-            </li>
-            <li>
-                <code><strong>whois_lookup: </strong></code>
-                      Query raw WHOIS record for a domain name, IP address, CIDR block or ASN. Returns the original detailed WHOIS record exactly as provided by the registrar or RIR.
-            </li>
-          </ul>
+            <h3>MCP endpoint</h3>
+              <div class="widgetbox endpoint">
+                <code>https://{{ Host }}/mcp</code>
+              </div>
 
-          <h3 >MCP endpoint</h3>
-          <p><code class="ip">https://{{ Host }}/mcp</code></p>
+            <h3>Available tools</h3>
+              <div class="tools-grid">
+                <div class="tool-item">
+                  <code class="tool-name">ip_lookup</code>
+                    <p>IP or domain geolocation lookup (domains automatically resolved to IPv4).</br>
+                      Returns country, region, city, ASN, ISP and all other fields displayed above.</br>
+                      <em>Leave the parameter empty to query your current IP.</em></p>
+                </div>
+                <div class="tool-item">
+                  <code class="tool-name">whois_lookup</code>
+                    <p>Raw WHOIS query for domains, IPs, CIDR blocks, or ASNs.</br>
+                      Returns the complete original record as provided by the registrar or RIR.</p>
+                      <em>Leave the parameter empty to query WHOIS of your current IP.</em></p>
+                </div>
+              </div>
 
-          <h3>Usage notes:</h3>
-          <ul>
-            <li>Only <strong>Streamable HTTP</strong> transport is supported (required by most MCP clients).</li>
-            <li>Add the URL above as a remote mcp server in VS Code, Cursor, Zed or any other MCP-compatible editor.</li>
-            <li>Once connected, you can invoke <code>ip_lookup or whois_lookup</code> directly from your AI chat or code assistant.</li>
-          </ul>
+            <h3>Usage</h3>
+              <ul class="usage-list">
+                <li>Only <strong>Streamable HTTP</strong> transport is supported (used by almost all MCP clients).</li>
+                <li>Add the URL above as a remote MCP server in any compatible editor.</li>
+                <li>Call tools via <code>@ip_lookup</code> / <code>@whois_lookup</code> or just describe what you need in natural language.</li>
+              </ul>
+
+              <div class="tip-box">
+                <strong>Try these examples:</strong></br>
+                <ul>
+                  <li>"Find the geolocation of my current IP."</li>
+                  <li>"Get the WHOIS information for this domain: {{ Host }}"</li>
+                  <li>"Where is IP 1.1.1.1 located?"</li>
+                  <li>"WHOIS for AS13335"</li>
+                </ul>
+              </div>
 
         </div>
       </div>
