@@ -98,6 +98,40 @@ local function whois_query(server, q)
   return table.concat(t, "\n")
 end
 
+local function extract_referral_server(iana_text)
+    if not iana_text then return nil end
+    local srv = iana_text:match("[Rr][Ee][Ff][Ee][Rr]%s*:%s*(%S+)")
+    if srv then return srv end
+
+    srv = iana_text:match("[Ww][Hh][Oo][Ii][Ss]%s*:%s*(%S+)")
+    if srv then return srv end
+
+    return nil
+end
+
+local function whois_fallback_with_referral(qtype, normalized_query)
+  if qtype == "asn" then
+    local w = whois_query("whois.radb.net", normalized_query)
+    if not w then
+      w = whois_query("whois.ripe.net", "-B " .. normalized_query)
+    end
+    return w, "WHOIS (port43: RADB/RIPE)"
+  else
+    local iana = whois_query("whois.iana.org", normalized_query)
+    local srv = extract_referral_server(iana)
+    if srv then
+      local w2 = whois_query(srv, normalized_query)
+      if w2 and #w2 > 0 then
+        return w2, ("WHOIS (port43: %s)"):format(srv)
+      else
+        return iana, "WHOIS (port43: IANA referral failed; using IANA)"
+      end
+    else
+      return iana, "WHOIS (port43: IANA; no referral)"
+    end
+  end
+end
+
 local function clean_whois(text)
   if not text or text == "" then return "No WHOIS data." end
   local out = {}
@@ -577,12 +611,7 @@ local whois_raw, source
 if rdap_obj then
   source = src
 else
-  whois_raw = whois_query(qtype=="asn" and "whois.radb.net" or "whois.iana.org",
-                          qtype=="asn" and target or target)
-  if not whois_raw and qtype=="asn" then
-    whois_raw = whois_query("whois.ripe.net", "-B "..target)
-  end
-  source = "WHOIS (port43)"
+  whois_raw, source = whois_fallback_with_referral(qtype, target)
 end
 
 -- ==== format handling ====
