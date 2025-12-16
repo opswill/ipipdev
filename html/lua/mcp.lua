@@ -31,7 +31,7 @@ local tools = {
       properties = {
         query = {
           type = "string",
-          description = "Domain name, IP address, CIDR (e.g. 1.1.1.0/24), or ASN (e.g. AS13335). Optional — leave empty to use visitor's IP"
+          description = "Domain (registrable eTLD+1, e.g., example.com or example.co.uk), IP address, CIDR (e.g., 1.1.1.0/24), or     ASN (e.g., AS13335). For domains, the client should normalize subdomains to the registrable root domain (eTLD+1) before calling this API. Optional — if omitted or empty, the server will use the visitor's IP address."
         },
         format = {
           type = "string",
